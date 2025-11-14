@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "dU9oGxZXsk4=",
+  "dgSpecHash": "Oascp9L2WRo=",
   "success": true,
-  "projectFilePath": "C:\\Users\\TrueH\\Documents\\Horario\\Aplicación y Servicios Web\\TallerDose\\TallerDise-osAur-main\\app\\backend\\backend.csproj",
+  "projectFilePath": "C:\\Users\\TrueH\\Documents\\Horario\\Aplicación y Servicios Web\\Taller\\TallerDose\\TallerDise-osAur-main\\app\\backend\\backend.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\TrueH\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\TrueH\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",

@@ -1,70 +1,55 @@
+using Domain.DTOs;
+using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using app.backend.Services;
-using app.backend.Models;
 
-namespace app.backend.Controllers
+namespace app.backend.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class ProductoController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class ProductoController : ControllerBase
+    private readonly IProductoService _service;
+
+    public ProductoController(IProductoService service)
     {
-        private readonly ProductoService _servicio;
+        _service = service;
+    }
 
-        public ProductoController(ProductoService servicio)
-        {
-            _servicio = servicio;
-        }
+    [HttpGet]
+    public async Task<ActionResult<List<ProductoDTO>>> Listar(CancellationToken ct)
+    {
+        var productos = await _service.ListarAsync(ct);
+        return Ok(productos);
+    }
 
-        //http://localhost:5000/api/producto/ConsultarTodos
-        [HttpGet]
-        [Route("ConsultarTodos")]
-        public List<Producto> ConsultarTodos()
-        {
-            return _servicio.ConsultarTodos();
-        }
+    [HttpGet("{codigo}")]
+    public async Task<ActionResult<ProductoDTO>> Obtener(string codigo, CancellationToken ct)
+    {
+        var producto = await _service.ObtenerAsync(codigo, ct);
+        if (producto is null) return NotFound();
+        return Ok(producto);
+    }
 
-        //http://localhost:5000/api/producto/ConsultarPorNit/{id}
-        [HttpGet]
-        [Route("ConsultarPorNit/{id}")]
-        public ActionResult<Producto> ConsultarPorNit(string id)
-        {
-            var producto = _servicio.ConsultarPorNit(id);
-            if (producto == null)
-            {
-                return NotFound(new { message = "Prodcuto no encontrado" });
-            }
-            return producto;
-        }
+    [HttpPost]
+    public async Task<IActionResult> Crear([FromBody] ProductoDTO dto, CancellationToken ct)
+    {
+        await _service.CrearAsync(dto, ct);
+        return CreatedAtAction(nameof(Obtener), new { codigo = dto.CodigoProducto }, dto);
+    }
 
-        ////http://localhost:5000/api/producto/Insertar
-        [HttpPost("Insertar")]
-        public ActionResult Insertar([FromBody] Producto producto)
-        {
-            bool resultado = _servicio.Insertar(producto);
-            if (resultado)
-                return Ok(new { message = "Producto registrado correctamente" });
-            return BadRequest(new { message = "No se pudo registrar el producto" });
-        }
+    [HttpPut("{codigo}")]
+    public async Task<IActionResult> Actualizar(string codigo, [FromBody] ProductoDTO dto, CancellationToken ct)
+    {
+        var ok = await _service.ActualizarAsync(codigo, dto, ct);
+        if (!ok) return NotFound();
+        return NoContent();
+    }
 
-        //http://localhost:5000/api/producto/Actualizar/1
-
-        [HttpPut("Actualizar/{id}")]
-        public IActionResult Actualizar(string id, [FromBody] Producto producto)
-        {
-            if (id != producto.CodigoProducto)
-                return BadRequest("ID en la ruta no coincide con el del producto");
-
-            var resultado = _servicio.ActualizarProducto(producto);
-            return resultado ? Ok("Producto actualizado") : NotFound("Producto no encontrado");
-        }
-
-        //http://localhost:5000/api/producto/Eliminar/1
-
-        [HttpDelete("{id}")]
-        public IActionResult Eliminar(string id)
-        {
-            var resultado = _servicio.EliminarProducto(id);
-            return resultado ? Ok("Producto eliminado") : NotFound("Producto no encontrado");
-        }
+    [HttpDelete("{codigo}")]
+    public async Task<IActionResult> Eliminar(string codigo, CancellationToken ct)
+    {
+        var ok = await _service.EliminarAsync(codigo, ct);
+        if (!ok) return NotFound();
+        return NoContent();
     }
 }

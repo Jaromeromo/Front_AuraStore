@@ -8,7 +8,11 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
+        // Producto
         CreateMap<Producto, ProductoDTO>().ReverseMap();
+
+        // Proveedor
+        CreateMap<Proveedor, ProveedorDTO>().ReverseMap();
 
         CreateMap<FacturaProducto, ItemFacturaDTO>()
             .ForCtorParam("CodigoProducto", o => o.MapFrom(s => s.CodigoProducto))

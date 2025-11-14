@@ -68,6 +68,8 @@ builder.Services.AddCors(options =>
 
 // DI de servicios
 builder.Services.AddScoped<IVentaService, VentaService>();
+builder.Services.AddScoped<IProductoService, ProductoServiceEf>();
+builder.Services.AddScoped<IProveedorService, ProveedorServiceEf>();
 
 var app = builder.Build();
 
